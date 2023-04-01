@@ -67,10 +67,15 @@ public class Analyzer<T> where T : unmanaged
         var head = tree[^1];
             
         SetValues(head);
-            
-        foreach (var pair in tree)
+
+        var enumerable = tree
+            .Where(n => _statistic
+                .Select(s => s.Key.ToString())
+                .Contains(n.Key));
+
+        foreach (var pair in enumerable)
         {
-            Console.WriteLine($"Key: {pair.Key}; Count: {pair.Count}; Code: {pair.Code}");
+            Console.WriteLine($"Key: {pair.Key}; StartCount: {pair.Count}; Code: {pair.Code}");
         }
     }
     

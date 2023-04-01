@@ -64,7 +64,7 @@ public class Analyzer<T> where T : unmanaged
             tree.Add(node);
         }
         
-        var head = tree.Last();
+        var head = tree[^1];
             
         SetValues(head);
             

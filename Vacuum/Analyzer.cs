@@ -71,11 +71,12 @@ public class Analyzer<T> where T : unmanaged
         var enumerable = tree
             .Where(n => _statistic
                 .Select(s => s.Key.ToString())
-                .Contains(n.Key));
+                .Contains(n.Key))
+            .OrderByDescending(n => n.Count);
 
         foreach (var pair in enumerable)
         {
-            Console.WriteLine($"Key: {pair.Key}; StartCount: {pair.Count}; Code: {pair.Code}");
+            Console.WriteLine($"Key: {pair.Key}; Count: {pair.Count}; Code: {pair.Code}");
         }
     }
     

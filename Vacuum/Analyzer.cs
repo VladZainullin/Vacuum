@@ -5,7 +5,6 @@ public class Analyzer<T> where T : unmanaged
     private readonly IEnumerable<T> _bytes;
     
     private readonly Dictionary<T, int> _statistic = new();
-    private int Count = 0;
 
     public Analyzer(IEnumerable<T> bytes)
     {
@@ -16,8 +15,6 @@ public class Analyzer<T> where T : unmanaged
     {
         foreach (var key in _bytes)
         {
-            Count++;
-            
             if (_statistic.ContainsKey(key))
             {
                 _statistic[key]++;

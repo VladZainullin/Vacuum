@@ -49,18 +49,18 @@ public class Encoder<T> where T : unmanaged
             .OrderByDescending(n => n.Count)
             .ToArray();
 
-        var startSize = _statistic.Count * 8;
-        Console.WriteLine($"Start size: {startSize} bites");
-        
-        var endSize = enumerable.Select(n => n.Code.Length * n.Count).Sum();
-        Console.WriteLine($"End size: {endSize} bites");
-
-        Console.WriteLine($"Economy: {startSize - endSize}");
-
-        foreach (var pair in enumerable)
-        {
-            Console.WriteLine($"Key: {pair.Key}; Count: {pair.Count}; Code: {pair.Code}");
-        }
+        // var startSize = _statistic.Count * 8;
+        // Console.WriteLine($"Start size: {startSize} bites");
+        //
+        // var endSize = enumerable.Select(n => n.Code.Length * n.Count).Sum();
+        // Console.WriteLine($"End size: {endSize} bites");
+        //
+        // Console.WriteLine($"Economy: {startSize - endSize}");
+        //
+        // foreach (var pair in enumerable)
+        // {
+        //     Console.WriteLine($"Key: {pair.Key}; Count: {pair.Count}; Code: {pair.Code}");
+        // }
     }
     
     private void CreateLeafs()

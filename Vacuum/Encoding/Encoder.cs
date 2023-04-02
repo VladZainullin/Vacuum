@@ -1,66 +1,55 @@
-namespace Vacuum;
+namespace Vacuum.Encoding;
 
 public class Encoder<T> where T : unmanaged
 {
-    private readonly Statistic<T> _statistic;
+    private readonly IEnumerable<T> _elements;
+    
+    private Statistic<T> _statistic = default!;
 
     private readonly List<Node> _nodes = new();
 
-    public Encoder(Statistic<T> statistic)
+    public Encoder(IEnumerable<T> elements)
     {
-        _statistic = statistic;
+        _elements = elements;
     }
 
     public void Coding()
     {
+        Analyze();
+        
         CreateLeafs();
+        CreateHuffmanTree();
+
+        var startSize = _statistic.Count * 8;
+        Console.WriteLine($"Start size: {startSize} bites");
         
-        for (var i = 0; i < _statistic.Dictionary.Count - 1; i++)
+        var endSize = _nodes.Select(n => n.Code.Length * n.Count).Sum();
+        Console.WriteLine($"End size: {endSize} bites");
+        
+        Console.WriteLine($"Economy: {startSize - endSize}");
+        
+        foreach (var pair in _nodes)
         {
-            var min1 = _nodes
-                .Where(p => !p.IsUse)
-                .MinBy(p => p.Count);
-            min1.IsUse = true;
-            
-            var min2 = _nodes
-                .Where(p => !p.IsUse)
-                .MinBy(p => p.Count);
-            min2.IsUse = true;
-
-            var node = new Node
-            {
-                Key = min1.Key + min2.Key,
-                Count = min1.Count + min2.Count,
-                Left = min1,
-                Right = min2,
-            };
-
-            _nodes.Add(node);
+            Console.WriteLine($"Key: {pair.Key}; Count: {pair.Count}; Code: {pair.Code}");
         }
+    }
+    
+    private void Analyze()
+    {
+        var dictionary = new Dictionary<T, int>();
         
-        var head = _nodes[^1];
-            
-        SetCodes(head);
+        foreach (var key in _elements)
+        {
+            if (dictionary.ContainsKey(key))
+            {
+                dictionary[key]++;
+                continue;
+            }
 
-        var enumerable = _nodes
-            .Where(n => _statistic.Dictionary
-                .Select(s => s.Key.ToString())
-                .Contains(n.Key))
-            .OrderByDescending(n => n.Count)
-            .ToArray();
+            dictionary.Add(key, 1);
+        }
 
-        // var startSize = _statistic.Count * 8;
-        // Console.WriteLine($"Start size: {startSize} bites");
-        //
-        // var endSize = enumerable.Select(n => n.Code.Length * n.Count).Sum();
-        // Console.WriteLine($"End size: {endSize} bites");
-        //
-        // Console.WriteLine($"Economy: {startSize - endSize}");
-        //
-        // foreach (var pair in enumerable)
-        // {
-        //     Console.WriteLine($"Key: {pair.Key}; Count: {pair.Count}; Code: {pair.Code}");
-        // }
+        _statistic = new Statistic<T>(dictionary);
     }
     
     private void CreateLeafs()
@@ -77,19 +66,50 @@ public class Encoder<T> where T : unmanaged
             _nodes.Add(node);
         }
     }
-    
-    private static void SetCodes(Node head, string value = "")
+
+    private void CreateHuffmanTree()
     {
-        head.Code = value;
+        var nodes = new List<Node>(_nodes);
         
-        if (head.Left != null)
+        for (var i = 0; i < _statistic.Dictionary.Count - 1; i++)
         {
-            SetCodes(head.Left, value + "1");
+            var min1 = nodes
+                .Where(p => !p.IsUse)
+                .MinBy(p => p.Count);
+            min1.IsUse = true;
+
+            var min2 = nodes
+                .Where(p => !p.IsUse)
+                .MinBy(p => p.Count);
+            min2.IsUse = true;
+
+            var node = new Node
+            {
+                Key = min1.Key + min2.Key,
+                Count = min1.Count + min2.Count,
+                Left = min1,
+                Right = min2,
+            };
+
+            nodes.Add(node);
+        }
+        
+        var root = nodes[^1];
+        SetCodes(root);
+    }
+
+    private static void SetCodes(Node root, string value = "")
+    {
+        root.Code = value;
+        
+        if (root.Left != null)
+        {
+            SetCodes(root.Left, value + "1");
         }
 
-        if (head.Right != null)
+        if (root.Right != null)
         {
-            SetCodes(head.Right, value + "0");
+            SetCodes(root.Right, value + "0");
         }
     }
 }

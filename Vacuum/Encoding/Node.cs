@@ -1,4 +1,4 @@
-namespace Vacuum;
+namespace Vacuum.Encoding;
 
 public class Node
 {

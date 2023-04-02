@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Coding.cs" />
+      <Folder Include="Decoding" />
     </ItemGroup>
 
 </Project>

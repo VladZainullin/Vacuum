@@ -4,35 +4,25 @@ public class Encoder<T> where T : unmanaged
 {
     private readonly Statistic<T> _statistic;
 
+    private readonly List<Node> _nodes = new();
+
     public Encoder(Statistic<T> statistic)
     {
         _statistic = statistic;
     }
-    
+
     public void Coding()
     {
-        var tree = new List<Node>();
-
-        foreach (var pair in _statistic.Dictionary)
-        {
-            var node = new Node
-            {
-                Key = pair.Key.ToString(),
-                Count = pair.Value,
-                Code = string.Empty
-            };
-            
-            tree.Add(node);
-        }
-
+        CreateLeafs();
+        
         for (var i = 0; i < _statistic.Dictionary.Count - 1; i++)
         {
-            var min1 = tree
+            var min1 = _nodes
                 .Where(p => !p.IsUse)
                 .MinBy(p => p.Count);
             min1.IsUse = true;
             
-            var min2 = tree
+            var min2 = _nodes
                 .Where(p => !p.IsUse)
                 .MinBy(p => p.Count);
             min2.IsUse = true;
@@ -45,14 +35,14 @@ public class Encoder<T> where T : unmanaged
                 Right = min2,
             };
 
-            tree.Add(node);
+            _nodes.Add(node);
         }
         
-        var head = tree[^1];
+        var head = _nodes[^1];
             
         SetCodes(head);
 
-        var enumerable = tree
+        var enumerable = _nodes
             .Where(n => _statistic.Dictionary
                 .Select(s => s.Key.ToString())
                 .Contains(n.Key))
@@ -70,6 +60,21 @@ public class Encoder<T> where T : unmanaged
         foreach (var pair in enumerable)
         {
             Console.WriteLine($"Key: {pair.Key}; Count: {pair.Count}; Code: {pair.Code}");
+        }
+    }
+    
+    private void CreateLeafs()
+    {
+        foreach (var pair in _statistic.Dictionary)
+        {
+            var node = new Node
+            {
+                Key = pair.Key.ToString(),
+                Count = pair.Value,
+                Code = string.Empty
+            };
+            
+            _nodes.Add(node);
         }
     }
     

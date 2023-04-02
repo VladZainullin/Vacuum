@@ -37,12 +37,7 @@ public class Encoder<T> where T : unmanaged
                 continue;
             }
 
-            var node = new Node
-            {
-                Key = key.ToString(),
-                Count = 1,
-                Code = string.Empty
-            };
+            var node = new Node(key.ToString());
             
             dictionary.Add(key, node);
         }
@@ -66,13 +61,11 @@ public class Encoder<T> where T : unmanaged
                 .MinBy(p => p.Count);
             min2.IsUse = true;
 
-            var node = new Node
-            {
-                Key = min1.Key + min2.Key,
-                Count = min1.Count + min2.Count,
-                Left = min1,
-                Right = min2,
-            };
+            var node = new Node(
+                min1.Key + min2.Key,
+                min1.Count + min2.Count,
+                min1,
+                min2);
 
             nodes.Add(node);
         }

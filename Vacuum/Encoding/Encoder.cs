@@ -33,7 +33,7 @@ public class Encoder<T> where T : unmanaged
 
     private void Analyze()
     {
-        var dictionary = new Dictionary<T, Node>();
+        var dictionary = new SortedDictionary<T, Node>();
         
         foreach (var key in _elements)
         {
@@ -86,7 +86,7 @@ public class Encoder<T> where T : unmanaged
 
         foreach (var element in _elements)
         {
-            var node = _statistic.Dictionary.Values.Single(n => n.Key == element.ToString());
+            var node = _statistic.Dictionary[element];
 
             builder.Append(node.Code);
         }

@@ -11,10 +11,10 @@ internal static class Program
     {
         var bytes = File.ReadAllBytes("/Users/vadislavzainullin/MEGAsync/Исмарт/1 семестр/История/Керов История России.doc");
 
-        var encoder = new Encoder<char>(Text);
+        var encoder = new Encoder<byte>(bytes);
         var coding = encoder.Coding();
 
-        var decoder = new Decoder<char>(coding);
+        var decoder = new Decoder<byte>(coding);
 
         var result = decoder.Decode();
         foreach (var e in result)

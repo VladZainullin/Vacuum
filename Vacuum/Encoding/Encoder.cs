@@ -71,7 +71,7 @@ public class Encoder<T> where T : unmanaged
         }
         
         var root = nodes[^1];
-        root.Code = string.Empty;
+        root.Coding();
     }
 
     private string GenerateData()

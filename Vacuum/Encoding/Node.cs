@@ -23,7 +23,7 @@ public class Node
     public string Code
     {
         get => _code;
-        set
+        private set
         {
             _code = value;
             
@@ -37,6 +37,11 @@ public class Node
                 Right.Code = value + "0";
             }
         }
+    }
+
+    public void Coding()
+    {
+        Code = string.Empty;
     }
 
     private Node? Left { get; }

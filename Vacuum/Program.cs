@@ -11,6 +11,8 @@ internal static class Program
         var analyzer = new Analyzer<byte>(bytes);
         
         var statistic = analyzer.Analyze();
-        statistic.Coding();
+
+        var encoder = new Encoder<byte>(statistic);
+        encoder.Coding();
     }
 }

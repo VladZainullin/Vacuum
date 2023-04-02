@@ -72,7 +72,16 @@ public class Analyzer<T> where T : unmanaged
             .Where(n => _statistic
                 .Select(s => s.Key.ToString())
                 .Contains(n.Key))
-            .OrderByDescending(n => n.Count);
+            .OrderByDescending(n => n.Count)
+            .ToArray();
+
+        var startSize = _bytes.Count() * 8;
+        Console.WriteLine($"Start size: {startSize} bites");
+        
+        var endSize = enumerable.Select(n => n.Code.Length * n.Count).Sum();
+        Console.WriteLine($"End size: {endSize} bites");
+
+        Console.WriteLine($"Economy: {startSize - endSize}");
 
         foreach (var pair in enumerable)
         {

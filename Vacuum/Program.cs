@@ -6,7 +6,9 @@ internal static class Program
 
     public static void Main()
     {
-        var analyzer = new Analyzer<char>(Text);
+        var bytes = File.ReadAllBytes("/Users/vadislavzainullin/MEGAsync/Исмарт/1 семестр/История/Керов История России.doc");
+        
+        var analyzer = new Analyzer<byte>(bytes);
         
         analyzer.Analyze();
         analyzer.Coding();

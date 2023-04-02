@@ -13,16 +13,22 @@ public class Encoder<T> where T : unmanaged
         _elements = elements;
     }
 
-    public void Coding()
+    public Coding<T> Coding()
     {
         Analyze();
         
         CreateHuffmanTree();
 
-        var table = _statistic.Dictionary;
+        var table = _statistic.Dictionary
+            .ToDictionary(
+                p => p.Key,
+                p => p.Value.Code);
+        
         var data = GenerateData();
 
         Print();
+
+        return new Coding<T>(table, data);
     }
 
     private void Analyze()
@@ -82,7 +88,7 @@ public class Encoder<T> where T : unmanaged
         {
             var node = _statistic.Dictionary.Values.Single(n => n.Key == element.ToString());
 
-            builder.Append(node?.Code);
+            builder.Append(node.Code);
         }
 
         return builder.ToString();

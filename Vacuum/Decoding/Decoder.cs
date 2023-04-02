@@ -11,7 +11,9 @@ public class Decoder<T> where T : unmanaged
 
     public IEnumerable<T> Decode()
     {
-        for (var index = 0; index < _coding.Data.Length - 1; index++)
+        var index = 0;
+
+        while (index < _coding.Data.Length - 1)
         {
             var shift = 0;
             
@@ -24,6 +26,7 @@ public class Decoder<T> where T : unmanaged
                 value = _coding.Data[range];
             }
             
+            index += shift;
             yield return _coding.Table.Single(e => e.Value == value).Key;
         }
     }

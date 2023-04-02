@@ -71,24 +71,9 @@ public class Encoder<T> where T : unmanaged
         }
         
         var root = nodes[^1];
-        SetCodes(root);
+        root.Code = string.Empty;
     }
 
-    private static void SetCodes(Node root, string value = "")
-    {
-        root.Code = value;
-        
-        if (root.Left != null)
-        {
-            SetCodes(root.Left, value + "1");
-        }
-
-        if (root.Right != null)
-        {
-            SetCodes(root.Right, value + "0");
-        }
-    }
-    
     private string GenerateData()
     {
         var builder = new StringBuilder();

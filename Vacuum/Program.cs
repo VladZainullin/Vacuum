@@ -10,7 +10,7 @@ internal static class Program
         
         var analyzer = new Analyzer<byte>(bytes);
         
-        analyzer.Analyze();
-        analyzer.Coding();
+        var statistic = analyzer.Analyze();
+        statistic.Coding();
     }
 }

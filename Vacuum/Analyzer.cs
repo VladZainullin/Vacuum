@@ -66,7 +66,7 @@ public class Analyzer<T> where T : unmanaged
         
         var head = tree[^1];
             
-        SetValues(head);
+        SetCodes(head);
 
         var enumerable = tree
             .Where(n => _statistic
@@ -89,18 +89,18 @@ public class Analyzer<T> where T : unmanaged
         }
     }
     
-    private static void SetValues(Node head, string value = "")
+    private static void SetCodes(Node head, string value = "")
     {
         head.Code = value;
         
         if (head.Left != null)
         {
-            SetValues(head.Left, value + "1");
+            SetCodes(head.Left, value + "1");
         }
 
         if (head.Right != null)
         {
-            SetValues(head.Right, value + "0");
+            SetCodes(head.Right, value + "0");
         }
     }
 }

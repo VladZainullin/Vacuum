@@ -2,12 +2,12 @@ namespace Vacuum.Encoding;
 
 public class Statistic<T> where T : unmanaged
 {
-    public Dictionary<T, int> Dictionary { get; set; }
+    public Dictionary<T, Node> Dictionary { get; set; }
 
-    public Statistic(Dictionary<T, int> dictionary)
+    public Statistic(Dictionary<T, Node> dictionary)
     {
         Dictionary = dictionary;
     }
 
-    public int Count => Dictionary.Select(e => e.Value).Sum();
+    public int Count => Dictionary.Select(e => e.Value.Count).Sum();
 }

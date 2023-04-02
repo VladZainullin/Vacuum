@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Vacuum.Encoding;
 
 public class Encoder<T> where T : unmanaged
@@ -5,8 +7,6 @@ public class Encoder<T> where T : unmanaged
     private readonly IEnumerable<T> _elements;
     
     private Statistic<T> _statistic = default!;
-
-    private readonly List<Node> _nodes = new();
 
     public Encoder(IEnumerable<T> elements)
     {
@@ -17,59 +17,42 @@ public class Encoder<T> where T : unmanaged
     {
         Analyze();
         
-        CreateLeafs();
         CreateHuffmanTree();
 
-        var startSize = _statistic.Count * 8;
-        Console.WriteLine($"Start size: {startSize} bites");
-        
-        var endSize = _nodes.Select(n => n.Code.Length * n.Count).Sum();
-        Console.WriteLine($"End size: {endSize} bites");
-        
-        Console.WriteLine($"Economy: {startSize - endSize}");
-        
-        foreach (var pair in _nodes)
-        {
-            Console.WriteLine($"Key: {pair.Key}; Count: {pair.Count}; Code: {pair.Code}");
-        }
+        var table = _statistic.Dictionary;
+        var data = GenerateData();
+
+        Print();
     }
-    
+
     private void Analyze()
     {
-        var dictionary = new Dictionary<T, int>();
+        var dictionary = new Dictionary<T, Node>();
         
         foreach (var key in _elements)
         {
             if (dictionary.ContainsKey(key))
             {
-                dictionary[key]++;
+                dictionary[key].Count++;
                 continue;
             }
 
-            dictionary.Add(key, 1);
+            var node = new Node
+            {
+                Key = key.ToString(),
+                Count = 1,
+                Code = string.Empty
+            };
+            
+            dictionary.Add(key, node);
         }
 
         _statistic = new Statistic<T>(dictionary);
     }
-    
-    private void CreateLeafs()
-    {
-        foreach (var pair in _statistic.Dictionary)
-        {
-            var node = new Node
-            {
-                Key = pair.Key.ToString(),
-                Count = pair.Value,
-                Code = string.Empty
-            };
-            
-            _nodes.Add(node);
-        }
-    }
 
     private void CreateHuffmanTree()
     {
-        var nodes = new List<Node>(_nodes);
+        var nodes = new List<Node>(_statistic.Dictionary.Values);
         
         for (var i = 0; i < _statistic.Dictionary.Count - 1; i++)
         {
@@ -110,6 +93,36 @@ public class Encoder<T> where T : unmanaged
         if (root.Right != null)
         {
             SetCodes(root.Right, value + "0");
+        }
+    }
+    
+    private string GenerateData()
+    {
+        var builder = new StringBuilder();
+
+        foreach (var element in _elements)
+        {
+            var node = _statistic.Dictionary.Values.Single(n => n.Key == element.ToString());
+
+            builder.Append(node?.Code);
+        }
+
+        return builder.ToString();
+    }
+    
+    private void Print()
+    {
+        var startSize = _statistic.Count * 8;
+        Console.WriteLine($"Start size: {startSize} bites");
+
+        var endSize = _statistic.Dictionary.Values.Select(n => n.Code.Length * n.Count).Sum();
+        Console.WriteLine($"End size: {endSize} bites");
+
+        Console.WriteLine($"Economy: {startSize - endSize}");
+
+        foreach (var pair in _statistic.Dictionary.Values)
+        {
+            Console.WriteLine($"Key: {pair.Key}; Count: {pair.Count}; Code: {pair.Code}");
         }
     }
 }
